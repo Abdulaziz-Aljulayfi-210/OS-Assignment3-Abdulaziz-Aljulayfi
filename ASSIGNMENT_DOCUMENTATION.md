@@ -126,53 +126,58 @@ I implemented fine-grained locking by using separate ReentrantLock objects for e
 ## Part 3: Synchronization Analysis (1 mark)
 
 ### Critical Section #1: Counter Variables
-
-**Which variables**: 
-
-**Why they need protection**: 
-
-**Synchronization mechanism used**: 
-
-**Code snippet**:
+Which variables: contextSwitchCount, completedProcessCount, totalWaitingTime.
+Why they need protection: These variables are shared among all process threads. Without protection, "Race Conditions" can occur where multiple threads try to update the value at the same moment, causing incorrect final totals and data loss.
+Synchronization mechanism used: ReentrantLock (specifically fine-grained locks for each counter).
 ```java
-// Paste your implementation here
+public static void incrementContextSwitch() {
+    contextSwitchLock.lock();
+    try {
+        contextSwitchCount++;
+    } finally {
+        contextSwitchLock.unlock();
+    }
+}
 ```
-
-**Justification**: 
+Justification: Using ReentrantLock with a try-finally block ensures that the increment operation is atomic (happens all at once) and that the lock is always released, even if an error occurs.
 
 ---
 
 ### Critical Section #2: Execution Log
-
-**What resource**: 
-
-**Why it needs protection**: 
-
-**Synchronization mechanism used**: 
+What resource: executionLog (An ArrayList<String>).
+Why it needs protection: The ArrayList class in Java is not thread-safe. If multiple threads try to add messages (log entries) simultaneously, it can lead to a ConcurrentModificationException or the loss of log data.
+Synchronization mechanism used: ReentrantLock (logLock).
 
 **Code snippet**:
 ```java
-// Paste your implementation here
+public static void logExecution(String message) {
+    logLock.lock();
+    try {
+        executionLog.add(message);
+    } finally {
+        logLock.unlock();
+    }
+}
 ```
-
-**Justification**: 
+Justification: Protecting the log with a lock ensures that every "event" in the simulation is recorded safely and in the correct order without crashing the program.
 
 ---
 
 ### Critical Section #3: CPU Semaphore
-
-**Purpose of semaphore**: 
-
-**Number of permits and why**: 
-
-**Where implemented**: 
+Purpose of semaphore: To control access to the "CPU resource" and limit how many threads can execute their burst time at once.
+Number of permits and why: 1 permit. This is because we are simulating a single-core CPU, which can only handle one process at a time.
+Where implemented: In the run() and runToCompletion() methods of the Process class. 
 
 **Code snippet**:
 ```java
-// Paste your implementation here
+try {
+    SharedResources.cpuSemaphore.acquire();
+    // ... process execution logic ...
+} finally {
+    SharedResources.cpuSemaphore.release();
+}
 ```
-
-**Effect on program behavior**: 
+Effect on program behavior: It prevents all threads from running their code at the same time. It forces them to wait in the "Ready Queue" and only proceed when the semaphore is available, making the simulation realistic.
 
 ---
 
