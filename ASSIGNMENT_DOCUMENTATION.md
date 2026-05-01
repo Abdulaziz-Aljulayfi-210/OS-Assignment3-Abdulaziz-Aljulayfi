@@ -241,24 +241,21 @@ I learned that while synchronization is always necessary for safety, its impact 
 ## Part 5: Reflection and Learning
 
 ### What I learned about synchronization:
-
-[6-8 sentences about key concepts, challenges, insights]
+Working on this assignment taught me that synchronization is the backbone of any multi-threaded system. I learned how shared resources like counters and logs can easily become corrupted if multiple threads access them at the same time. Using ReentrantLock showed me how to protect data integrity by allowing only one thread to enter a critical section. I also understood the role of a Semaphore in managing resource limits, like simulating a single CPU core. One of the biggest challenges was avoiding deadlocks, which taught me the importance of the try-finally block. Finally, I realized that choosing between fine-grained and coarse-grained locking is a balance between performance and simplicity.
 
 ---
 
 ### Real-world applications:
+Example 1: Online Banking Systems
+When two people try to withdraw money from the same joint account at the exact same time, the system must use synchronization. It ensures the balance is updated correctly for one person before the second person's transaction starts, preventing the account from going below zero.
 
-Give TWO examples where synchronization is critical:
-
-**Example 1**: 
-
-**Example 2**: 
+Example 2: Flight or Movie Booking
+In a booking app, hundreds of users might try to book the last available seat simultaneously. Synchronization ensures that once a seat is "locked" by one user for a transaction, no one else can buy it until the lock is released or the transaction is finished.
 
 ---
 
 ### How I would explain synchronization to others:
-
-[Explain to someone who just finished Assignment 1 - use simple terms and analogies]
+Imagine a small coffee shop with only one coffee machine (the CPU) and a shared notebook to record sales (shared variables). If five baristas (threads) try to use the machine and write in the notebook all at once, they will bump into each other and mess up the records. Synchronization is like having a "key" to the machine and the notebook. Only the barista who has the key can make coffee or write. When they finish, they pass the key to the next person in line. This keeps everything organized, prevents accidents, and ensures the records are always correct.
 
 ---
 
@@ -278,15 +275,15 @@ Give TWO examples where synchronization is critical:
 
 ## Summary
 
-**Total time spent on assignment**: 
+**Total time spent on assignment**: 6h 
 
 **Key takeaways**: 
-1. 
-2. 
-3. 
+1. Shared resources
+2. Using finally blocks is essential to avoid deadlocks
+3. Fine-grained locking is better for performance when shared variables are independent
 
 **Most challenging aspect**: 
-
+deadlocks
 **What I'm most proud of**: 
 
 ---
