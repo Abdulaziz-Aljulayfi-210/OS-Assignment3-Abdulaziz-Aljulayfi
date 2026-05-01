@@ -40,7 +40,7 @@ Time spent: 1h
 
 ---
 
-### Entry 2 - [Date, Time]
+### Entry 2 - 1-may      
 What I implemented: Integrated the Semaphore to control CPU access in the Process class.
 Challenges encountered: The program was freezing because I forgot to release the semaphore.
 How I solved it: I placed the release() method inside a finally block to ensure it always runs.
@@ -48,7 +48,7 @@ Testing approach: Observed the console to ensure only one process is "executing"
 Time spent:1h
 ---
 
-### Entry 3 - [Date, Time]
+### Entry 3 - 1-may
 What I implemented: Synchronized the executionLog and fixed the terminal output.
 Challenges encountered: The log list was throwing errors when multiple threads tried to write at once.
 How I solved it: I wrapped the executionLog.add() call inside a lock-protected method.
@@ -91,8 +91,7 @@ Time spent:1.5h
 - What incorrect behavior could occur?
 
 **Your Answer**:
-
-[Your answer here - 4-6 sentences with code examples]
+The original code contains race conditions in shared resources like contextSwitchCount and the executionLog list. For the counters, concurrent access is a problem because multiple threads may read and update the same value simultaneously leading to lost updates where the final total is lower than expected. For the executionLog, simultaneous access to the ArrayList can cause a ConcurrentModificationException or data corruption. By using ReentrantLock, I ensured that only one thread can modify these resources at any given time, maintaining data integrity.
 
 ---
 
@@ -100,8 +99,7 @@ Time spent:1.5h
 **Q**: Explain the difference between ReentrantLock and Semaphore. Where did you use each in your code and why?
 
 **Your Answer**:
-
-[Your answer here - explain your implementation choices]
+ReentrantLock is a mutual exclusion mechanism (Mutex) designed to protect shared state; I used it for counters and logs to ensure that only one thread enters the critical section. In contrast, a Semaphore manages a set of permits to control access to a resource pool. I used a Semaphore(1) to represent the CPU, which limits the number of processes executing their burst time concurrently. While locks are for "ownership" of data, semaphores are better for "signaling" and limiting concurrent execution in the simulation.
 
 ---
 
@@ -109,8 +107,7 @@ Time spent:1.5h
 **Q**: What is deadlock? Explain TWO prevention techniques and what you did to prevent deadlocks in your code.
 
 **Your Answer**:
-
-[Your answer here - reference try-finally blocks, lock ordering, etc.]
+A deadlock occurs when two or more threads are blocked forever, each waiting for a resource held by the other. To prevent this, I used try-finally blocks to guarantee that lock.unlock() and semaphore.release() are always executed, even if the thread is interrupted. Additionally, I followed a resource ordering strategy and kept critical sections extremely short. This ensures that no thread holds a lock longer than necessary, significantly reducing the circular wait condition required for a deadlock to happen.
 
 ---
 
@@ -122,8 +119,7 @@ Time spent:1.5h
 - Given that the three counters are independent, which approach provides better concurrency and why?
 
 **Your Answer**:
-
-[Your answer here - explain coarse-grained vs fine-grained locking, independence of counters, concurrency implications. Show understanding of when to use each approach. 5-8 sentences expected.]
+I implemented fine-grained locking by using separate ReentrantLock objects for each of the three counters (contextSwitchLock, completedProcessLock, and waitingTimeLock). Since these counters are logically independent, this choice allows multiple threads to update different counters simultaneously without blocking each other. A single coarse-grained lock would be simpler but would force a thread updating the "waiting time" to wait for another thread updating "context switches," which decreases performance. Therefore, fine-grained locking provides better concurrency and higher throughput for the simulation.
 
 ---
 
