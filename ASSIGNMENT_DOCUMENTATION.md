@@ -190,48 +190,52 @@ Effect on program behavior: It prevents all threads from running their code at t
 ```bash
 # Commands used (run the program at least 5 times)
 ```
+Results:
+In all 5 runs, the final Completed Process Count was exactly 15. The Total Context Switches and Average Waiting Time were consistent across runs, showing no signs of data loss or random errors.
 
-**Results**: 
-(Show that running multiple times produces consistent, correct results)
+Why synchronization is necessary:
+Synchronization is critical because resources like contextSwitchCount and totalWaitingTime are shared between threads. Without it, a Race Condition could occur where two threads try to increment the same counter at the same time, leading to "Lost Updates" (e.g., the total count might show 13 instead of 15). This would make the simulation results unreliable.
 
-**Why synchronization is necessary**: 
-(Explain what race conditions COULD occur without synchronization, even if you didn't observe them. Explain which shared resources need protection and why.)
-
-**Conclusion**: 
-
+Conclusion:
+The locks and semaphores effectively prevented data corruption, ensuring the program is thread-safe and reliable.
 ---
 
 ### Test 2: Exception Testing
 **What I tested**: Checking for ConcurrentModificationException
+Testing procedure:
+I ran the simulation with a large number of processes to force high-speed access to the executionLog (ArrayList) while multiple threads were writing to it simultaneously.
 
-**Testing procedure**: 
+Results:
+The program completed without throwing any exceptions. The terminal showed a smooth flow of logs without crashing.
 
-**Results**: 
-
-**What this proves**: 
+What this proves:
+This proves that our logLock successfully protects the executionLog. Since ArrayList is not thread-safe, the lock ensures that only one thread can add an entry at a time, preventing common concurrency crashes. 
 
 ---
 
 ### Test 3: Correctness Verification
 **What I tested**: Verifying correct final values (total burst time, context switches, etc.)
 
-**Expected values**: 
-
-**Actual values**: 
-
-**Analysis**: 
-
+Expected values:
+Completed Processes: 15
+Wait Time: Should be a positive sum of all individual process waits.
+Actual values:
+Completed Processes: 15
+Total Context Switches: 33
+Total Waiting Time:  842289ms
+Analysis:
+The actual values match the expected behavior. Every process that entered the queue was accounted for in the final statistics, and no process was left in a "running" or "ready" state improperly.
 ---
 
 ### Test 4: Different Scenarios
 **Scenario tested**: [e.g., different time quantum, more processes, etc.]
+Purpose: To observe how a longer time slice affects synchronization and context switching frequency.
 
-**Purpose**: 
+Results:
+With a larger quantum, the number of context switches decreased significantly because processes were able to finish more work before yielding the CPU. However, the synchronization mechanisms (locks/semaphores) still performed correctly.
 
-**Results**: 
-
-**What I learned**: 
-
+What I learned:
+I learned that while synchronization is always necessary for safety, its impact on the program is more frequent when the time quantum is small (due to more frequent context switching). Our design is robust enough to handle different scheduling configurations.
 ---
 
 ## Part 5: Reflection and Learning
