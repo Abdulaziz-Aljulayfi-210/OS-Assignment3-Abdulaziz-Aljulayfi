@@ -31,43 +31,29 @@
 
 Document your development process with **minimum 3 entries** showing progression:
 
-### Entry 1 - [Date, Time]
-**What I implemented**: 
-
-**Challenges encountered**: 
-
-**How I solved it**: 
-
-**Testing approach**: 
-
-**Time spent**: 
+### Entry 1 - 1-may
+What I implemented: I added ReentrantLock for all shared counters in the SharedResources class.
+Challenges encountered: I wasn't sure if I should use one lock for everything or separate locks.
+How I solved it: I used separate locks (fine-grained) to allow better performance and less waiting time.
+Testing approach: I ran the code and checked if the final counts matched the number of processes.
+Time spent: 1h
 
 ---
 
 ### Entry 2 - [Date, Time]
-**What I implemented**: 
-
-**Challenges encountered**: 
-
-**How I solved it**: 
-
-**Testing approach**: 
-
-**Time spent**: 
-
+What I implemented: Integrated the Semaphore to control CPU access in the Process class.
+Challenges encountered: The program was freezing because I forgot to release the semaphore.
+How I solved it: I placed the release() method inside a finally block to ensure it always runs.
+Testing approach: Observed the console to ensure only one process is "executing" at a time.
+Time spent:1h
 ---
 
 ### Entry 3 - [Date, Time]
-**What I implemented**: 
-
-**Challenges encountered**: 
-
-**How I solved it**: 
-
-**Testing approach**: 
-
-**Time spent**: 
-
+What I implemented: Synchronized the executionLog and fixed the terminal output.
+Challenges encountered: The log list was throwing errors when multiple threads tried to write at once.
+How I solved it: I wrapped the executionLog.add() call inside a lock-protected method.
+Testing approach: Verified the final log size to ensure no messages were lost.
+Time spent:1.5h
 ---
 
 ### Entry 4 - [Date, Time]
