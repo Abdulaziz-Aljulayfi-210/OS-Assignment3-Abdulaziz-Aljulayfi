@@ -57,15 +57,11 @@ Time spent:1.5h
 ---
 
 ### Entry 4 - [Date, Time]
-**What I implemented**: 
-
-**Challenges encountered**: 
-
-**How I solved it**: 
-
-**Testing approach**: 
-
-**Time spent**: 
+What I implemented:Final code refactoring, adding comprehensive comments, and verifying the try-finally blocks for all synchronized sections.
+Challenges encountered:Ensuring that the unlock() calls were placed exactly after the critical sections to avoid holding resources for longer than necessary.
+How I solved it:Conducted a manual code review to verify that every lock() has a corresponding unlock() in the finally block, and ensured that no lock is held during a Thread.sleep() call.
+Testing approach:Performed a "Stress Test" by increasing the number of processes to 30 to see if any deadlocks or race conditions appear under heavy load.
+Time spent:2h
 
 ---
 
@@ -266,10 +262,11 @@ Imagine a small coffee shop with only one coffee machine (the CPU) and a shared 
 **Number of commits**: 
 
 **Commit messages**: 
-1. 
-2. 
-3. 
-4. 
+1. add first
+2. add 2
+3. add 3
+4. last edit
+
 
 ---
 
